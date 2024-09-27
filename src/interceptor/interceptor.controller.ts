@@ -1,11 +1,15 @@
 import { Controller, Redirect, Query, All } from '@nestjs/common';
+import { RedirectInterceptor } from './interceptor.service';
 
-@Controller('redirect')
+@Controller()
 export class RedirectController {
-  @All('mawe')
+  @All()
   @Redirect()
-  handleAll(@Query('target') target: string) {
-    const url = target ? `http://localhost:3003/` : 'http://localhost:3000/';
+  async handleAll(@Query() query: Record<string, any>) {
+    const redirectService = new RedirectInterceptor();
+    const queryString = new URLSearchParams(query).toString();
+    const connection = await redirectService.interceptConnection({serviceId:query.service_id});
+    const url =`${connection}?${queryString}`;
     return { url, statusCode: 302 };
   }
 }
