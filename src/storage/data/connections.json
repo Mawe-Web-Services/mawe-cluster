@@ -1,70 +1,46 @@
 {
-    "connections":[
-        {
-          "id": "ass72s-ajshe2-asjee",
-          "relay_connection": "https://olive-tips-hang.loca.lt",
-          "wallet": "relay-dollar-wallet",
-          "services": [
-            {
-              "service_id": "aajsn9-ajdm32-aoend45",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://weak-pears-enter.loca.lt"
-            },
-            {
-              "service_id": "aajsn9-ajdm32-aoe3235",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://olive-tips-hang.loca.lt"
-            },
-            {
-              "service_id": "aajsn9-ajdm32-ao2345",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://olive-tips-hang.loca.lt"
-            }
-          ]
-        },
-        {
-          "id": "bas93k-aldoi3-bhssk",
-          "relay_connection": "https://mountain-fog-bridge.loca.lt",
-          "wallet": "relay-euro-wallet",
-          "services":[
-            {
-              "service_id": "aajsn9-ajdm32-aoend45",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://ripe-aliens-rush.loca.lt"
-            },
-            {
-              "service_id": "aajsn9-ajdm32-aoe3235",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://olive-tips-hang.loca.lt"
-            },
-            {
-              "service_id": "aajsn9-ajdm32-ao2345",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://olive-tips-hang.loca.lt"
-            }
-          ]
-        },
-        {
-          "id": "cas12x-akfi23-alpoe",
-          "relay_connection": "https://sky-wave-flow.loca.lt",
-          "wallet": "relay-pound-wallet",
-          "services": [
-            {
-              "service_id": "aajsn9-ajdm32-aoend45",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://khaki-regions-see.loca.lt"
-            },
-            {
-              "service_id": "aajsn9-ajdm32-aoe3235",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://olive-tips-hang.loca.lt"
-            },
-            {
-              "service_id": "aajsn9-ajdm32-ao2345",
-              "createdAt": "2024-09-23T12:34:56Z",
-              "service_connection": "https://olive-tips-hang.loca.lt"
-            }
-          ]
-        }
-      ]
+  "connections": [
+    {
+      "id": "A",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    },
+    {
+      "id": "B",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    },
+    {
+      "id": "C",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    },
+    {
+      "id": "A",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    },
+    {
+      "id": "A",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    },
+    {
+      "id": "B",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    },
+    {
+      "id": "C",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": []
+    }
+  ]
 }
