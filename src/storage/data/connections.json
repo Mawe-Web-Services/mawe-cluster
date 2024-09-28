@@ -1,46 +1,4 @@
 {
   "connections": [
-    {
-      "id": "A",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    },
-    {
-      "id": "B",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    },
-    {
-      "id": "C",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    },
-    {
-      "id": "A",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    },
-    {
-      "id": "A",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    },
-    {
-      "id": "B",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    },
-    {
-      "id": "C",
-      "relay_connection": "http://localhost:3003",
-      "wallet": "relay-new-wllet",
-      "services": []
-    }
   ]
 }
