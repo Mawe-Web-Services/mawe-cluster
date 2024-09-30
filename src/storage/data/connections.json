@@ -1,4 +1,58 @@
 {
   "connections": [
+    {
+      "id": "mndie-sdadceeasd-adnex",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": [
+        {
+          "service_id": "f4a0f83e-108b-4711-8dc3-ab768333433c",
+          "createdAt": "2024-09-29T05:09:46.981Z",
+          "service_connection": "https://social-icons-leave.loca.lt"
+        }
+      ]
+    },
+    {
+      "id": "mndie-sdadeasdassexx-adx",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": [
+        {
+          "service_id": "f4a0f83e-108b-4711-8dc3-ab768333433c",
+          "createdAt": "2024-09-29T05:09:46.981Z",
+          "service_connection": "https://long-words-warn.loca.lt"
+        }
+      ]
+    },
+    {
+      "id": "mndie-sdadcedasenheasd-adnex",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": [
+        {
+          "service_id": "f4a0f83e-108b-4711-8dc3-ab768333433c",
+          "createdAt": "2024-09-29T05:09:46.981Z",
+          "service_connection": "https://crazy-mugs-travel.loca.lt"
+        }
+      ]
+    },
+    {
+      "id": "mndie-sdaseadeasd-adx",
+      "relay_connection": "http://localhost:3003",
+      "wallet": "relay-new-wllet",
+      "services": [
+        {
+          "service_id": "f4a0f83e-108b-4711-8dc3-ab768333433c",
+          "createdAt": "2024-09-29T05:09:46.981Z",
+          "service_connection": "https://five-bees-grow.loca.lt"
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "service_id": "f4a0f83e-108b-4711-8dc3-ab768333433c",
+      "createdAt": "2024-09-29T05:09:46.981Z"
+    }
   ]
 }

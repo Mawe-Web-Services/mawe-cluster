@@ -1,7 +1,7 @@
 export interface IRelayService {
     service_id: string;
-    createdAt: string;
-    service_connection: string;
+    createdAt: Date;
+    service_connection?: string;
   }
   
   export interface IRelay {
@@ -13,4 +13,5 @@ export interface IRelayService {
 
   export interface IConnections {
     connections: IRelay[];
+    services: IRelayService[];
   }

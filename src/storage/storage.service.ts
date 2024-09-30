@@ -1,18 +1,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { HttpMethod } from 'src/core/enum/HttpMethod';
-import { IConnections, IRelay } from 'src/interceptor/interfaces/IConnections';
-import { IInsertRelayResponse } from 'src/interceptor/interfaces/IInsertRelayResponse';
+import { IConnections, IRelay, IRelayService } from 'src/interceptor/interfaces/IConnections';
 import { RemoteService } from 'src/remote/remote.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
+import { IInsertResponse } from 'src/interceptor/interfaces/IInsertResponse';
+import { IReturn } from 'src/core/interfaces/IReturn';
 
 export class StorageService {
   private remoteService:RemoteService;
   private distFilePath: string;
   private srcFilePath: string;
   private isWriting: boolean = false; 
-  private queue: (() => Promise<IInsertRelayResponse>)[] = [];
+  private queue: (() => Promise<IInsertResponse>)[] = [];
   private dificulty:number;
   private limitRequestTime: number;
 
@@ -20,7 +21,7 @@ export class StorageService {
     this.distFilePath = path.join(__dirname, 'data', 'connections.json');
     this.srcFilePath = path.join(__dirname, 'data', 'connections.json').replace('dist', 'src');
     this.remoteService = new RemoteService();
-    this.dificulty = 5;
+    this.dificulty = 4;
     this.limitRequestTime = 60000;
   }
 
@@ -53,7 +54,7 @@ export class StorageService {
   }
 
 
-  private async relayTest(connect: IRelay): Promise<boolean> {
+  public async relayTest(connect: IRelay): Promise<boolean> {
     const minerRote = '/miner';
     const body = {
       query: uuidv4(),
@@ -62,11 +63,10 @@ export class StorageService {
    const response = await this.remoteService.remote<{hash: string; nonce: number}>({
     method: HttpMethod.POST, 
     endpoint:`${connect.relay_connection}${minerRote}`, 
-    authorization:connect.id, 
+    authorization: connect.id, // deve ser usado o authorization específico do relay
     body: body,
     timeout:this.limitRequestTime
   });
-
 
   if(response.result){
   const nonce = response.result.nonce;
@@ -79,10 +79,30 @@ export class StorageService {
   return false;
   }
 
-  public async insertRelay(newConnection: IRelay): Promise<IInsertRelayResponse> {
+  private async deployService({connect,imageName, repository}:{connect: IRelay, imageName: string, repository:string}): Promise<IReturn<{ tunnelUrl: string; applicationId: string; }>> {
+    const deployRote = '/docker/deploy';
+    const body = {
+      imageName: imageName,
+      repository:repository
+    }
+   const response = await this.remoteService.remote<{tunnelUrl:string, applicationId:string}>({
+    method: HttpMethod.POST, 
+    endpoint:`${connect.relay_connection}${deployRote}`, 
+    authorization: connect.id, // deve ser usado o authorization específico do relay
+    body: body,
+    timeout:this.limitRequestTime
+  });
+
+   return response
+  }
+
+
+  public async insertRelay(newConnection: IRelay): Promise<IInsertResponse> {
     return new Promise((resolve) => {
-      const task = async (): Promise<IInsertRelayResponse> => {
+      const task = async (): Promise<IInsertResponse> => {
+
         const response = await this.relayTest(newConnection);
+
         if(!response){
           resolve({ status: 'ERROR', code: 500, message:'limit request time' });
           return { status: 'ERROR', code: 500, message: 'limit request time'}; 
@@ -100,6 +120,96 @@ export class StorageService {
           console.error('Erro ao adicionar nova conexão:', error.message);
           resolve({ status: 'ERROR', code: 401, message: error.message });
           return { status: 'ERROR', code: 401, message: error.message }; 
+        }
+      };
+
+      this.queue.push(task);
+
+      if (!this.isWriting) {
+        this.isWriting = true;
+        this.processQueue();
+      }
+    });
+  }
+
+  public async insertService({imageName, repository}:{imageName: string,repository:string}): Promise<IInsertResponse> {
+    return new Promise((resolve) => {
+      const task = async (): Promise<IInsertResponse> => {
+        try {
+          const newServiceId = uuidv4();
+          this.isWriting = true;
+
+          const connections = await this.getConnections();
+
+          if(!Boolean(connections.connections.length)){
+            resolve({ status: 'ERROR', code: 500, message: 'No connections' });
+            return { status: 'ERROR', code: 500, message: 'No connections' };
+          }
+       
+          
+          const relayToRemove = [];
+          for(let i = 0; i< connections.connections.length; i++) {
+            const relayTestResponse = await this.relayTest(connections.connections[i]);
+            if(!relayTestResponse){
+              relayToRemove.push(connections.connections[i].id);
+            }            
+          }
+
+          connections.connections = connections.connections.filter((connection)=> !relayToRemove.includes(connection.id));
+
+          if(!Boolean(connections.connections.length)){
+            resolve({ status: 'ERROR', code: 404, message: 'no relays available'});
+            return { status: 'ERROR', code: 404,  message: 'no relays available' };
+          }
+          const today = new Date();
+          for(let k = 0; k < connections.connections.length; k++){
+            const relay = connections.connections[k];
+            
+            const response = await this.deployService({
+              connect:relay, 
+              imageName:imageName, 
+              repository:repository
+            });
+
+            if(response.result.applicationId){
+
+              
+              const apiService = response.result;
+
+              const serviceBody: IRelayService = {
+                service_id: newServiceId,
+                createdAt: today,
+                service_connection: apiService.tunnelUrl
+              };
+              connections.connections[k].services.push(serviceBody);
+            }   
+          }
+          const verifyServiceOnRelay = connections.connections?.some(
+            (connection) => connection.services?.some(
+              (service) => service.service_id === newServiceId
+            )
+          );
+
+          if(verifyServiceOnRelay){
+            const newService = {
+              service_id: newServiceId,
+              createdAt: today
+            }
+            connections.services.push(newService);
+          };
+        
+
+          await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+          await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+
+          resolve({ status: 'SUCCESS', code: 200 });
+          return { status: 'SUCCESS', code: 200 };
+        } catch (error) {
+          console.error('Erro ao adicionar novo serviço:', error.message);
+          resolve({ status: 'ERROR', code: 401, message: error.message });
+          return { status: 'ERROR', code: 401, message: error.message };
+        } finally {
+          this.isWriting = false;
         }
       };
 
