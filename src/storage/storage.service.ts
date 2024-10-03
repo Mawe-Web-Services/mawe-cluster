@@ -202,8 +202,8 @@ export class StorageService {
           await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
           await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
 
-          resolve({ status: 'SUCCESS', code: 200 });
-          return { status: 'SUCCESS', code: 200 };
+          resolve({ status: 'SUCCESS', code: 200, serviceId: newServiceId });
+          return { status: 'SUCCESS', code: 200, serviceId: newServiceId };
         } catch (error) {
           console.error('Erro ao adicionar novo serviço:', error.message);
           resolve({ status: 'ERROR', code: 401, message: error.message });
