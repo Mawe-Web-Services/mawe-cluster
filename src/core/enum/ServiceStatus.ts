@@ -1,0 +1,12 @@
+export enum ServiceStatus {
+    PENDING = 'PENDING',
+    RUNNING = 'RUNNING',
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED',
+    STOPPED = 'STOPPED',
+    PAUSED = 'PAUSED',
+    RESTARTING = 'RESTARTING',
+    HIBERNATING = 'HIBERNATING',
+    UNKNOWN = 'UNKNOWN'
+  }
+  

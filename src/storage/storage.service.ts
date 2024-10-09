@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
 import { IInsertResponse } from 'src/interceptor/interfaces/IInsertResponse';
 import { IReturn } from 'src/core/interfaces/IReturn';
+import { ServiceStatus } from 'src/core/enum/ServiceStatus';
 
 export class StorageService {
   private remoteService:RemoteService;
@@ -179,7 +180,10 @@ export class StorageService {
               const serviceBody: IRelayService = {
                 service_id: newServiceId,
                 createdAt: today,
-                service_connection: apiService.tunnelUrl
+                service_connection: apiService.tunnelUrl,
+                request_count:0,
+                status: ServiceStatus.RUNNING
+                
               };
               connections.connections[k].services.push(serviceBody);
             }   
@@ -193,7 +197,7 @@ export class StorageService {
           if(verifyServiceOnRelay){
             const newService = {
               service_id: newServiceId,
-              createdAt: today
+              createdAt: today,
             }
             connections.services.push(newService);
           };
@@ -220,5 +224,32 @@ export class StorageService {
         this.processQueue();
       }
     });
+  }
+
+  public async registerService({ relayId, serviceId }: { relayId: string, serviceId: string }): Promise<void> {
+    try {
+      const connections = await this.getConnections();
+  
+      const relay = connections.connections.find((connection) => connection.id === relayId);
+      
+      if (!relay) {
+        throw new Error(`Relay with ID ${relayId} not found`);
+      }
+  
+      const service = relay.services.find((service) => service.service_id === serviceId);
+  
+      if (!service) {
+        throw new Error(`Service with ID ${serviceId} not found in relay ${relayId}`);
+      }
+
+      service.request_count = (service.request_count || 0) + 1;
+  
+      await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+      await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+  
+      console.log(`Request count for service ${serviceId} in relay ${relayId} incremented.`);
+    } catch (error) {
+      console.error('Erro ao registrar serviço:', error.message);
+    }
   }
 }

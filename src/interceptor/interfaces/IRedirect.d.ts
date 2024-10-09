@@ -1,3 +1,3 @@
 export interface IRedirector {
-    interceptConnection: ({serviceId}:{serviceId:string})=>Promise<string | boolean>;
+    interceptConnection: ({serviceId}:{serviceId:string})=>Promise<string[] | boolean>;
 }

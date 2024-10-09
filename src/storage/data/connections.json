@@ -1,14 +1,38 @@
 {
   "connections": [
     {
-      "id": "mawe-example-relay",
-      "relay_connection": "http://localhost:3003",
+      "id": "mawe-example-relay-brasil",
+      "relay_connection": "http://localhost:3013",
       "wallet": "ajsjsd-sjdns-sjdsn",
       "services": [
-       
+        {
+          "service_id": "b4fa65eb-8156-4793-b50e-a21948c39c8e",
+          "createdAt": "2024-10-09T16:30:12.268Z",
+          "service_connection": "https://thin-days-lie.loca.lt",
+          "request_count": 4,
+          "status": "RUNNING"
+        }
+      ]
+    },
+    {
+      "id": "mawe-example-relay-argentina",
+      "relay_connection": "http://localhost:3013",
+      "wallet": "ajsjsd-sjdns-sjdsn",
+      "services": [
+        {
+          "service_id": "b4fa65eb-8156-4793-b50e-a21948c39c8e",
+          "createdAt": "2024-10-09T16:30:12.268Z",
+          "service_connection": "https://vast-mammals-travel.loca.lt",
+          "request_count": 6,
+          "status": "RUNNING"
+        }
       ]
     }
   ],
   "services": [
+    {
+      "service_id": "b4fa65eb-8156-4793-b50e-a21948c39c8e",
+      "createdAt": "2024-10-09T16:30:12.268Z"
+    }
   ]
 }
