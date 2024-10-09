@@ -247,7 +247,6 @@ export class StorageService {
       await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
       await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
   
-      console.log(`Request count for service ${serviceId} in relay ${relayId} incremented.`);
     } catch (error) {
       console.error('Erro ao registrar serviço:', error.message);
     }

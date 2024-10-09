@@ -1,7 +1,23 @@
 {
   "connections": [
-    
+    {
+      "id": "brazil-kajs12-28jash",
+      "relay_connection": "https://weak-jokes-smell.loca.lt",
+      "services": [
+        {
+          "service_id": "a3fec896-f5d5-44b6-976b-a7f3ab2e2434",
+          "createdAt": "2024-10-09T21:38:19.891Z",
+          "service_connection": "https://floppy-dots-relate.loca.lt",
+          "request_count": 5,
+          "status": "RUNNING"
+        }
+      ]
+    }
   ],
   "services": [
+    {
+      "service_id": "a3fec896-f5d5-44b6-976b-a7f3ab2e2434",
+      "createdAt": "2024-10-09T21:38:19.891Z"
+    }
   ]
 }

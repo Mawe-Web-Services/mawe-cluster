@@ -9,6 +9,14 @@ import { HttpMethod } from 'src/core/enum/HttpMethod';
 export class RedirectController {
   constructor(private readonly httpService: HttpService) {}
 
+  @All()
+  async handleClusterWithoutParams(
+    @Query() query: Record<string, any>,
+    @Req() request: Request
+  ) {
+    return this.handleAll({ 0: '' }, query, request);
+  }
+
   @All('*')
   async handleAll(
     @Param() params: Record<string, any>,
@@ -33,7 +41,6 @@ export class RedirectController {
     }
 
     const shuffledConnections = shuffle(connections);
-    console.log("shuffledConnections", shuffledConnections)
 
     try {
       const requests = shuffledConnections.map((connection) => {

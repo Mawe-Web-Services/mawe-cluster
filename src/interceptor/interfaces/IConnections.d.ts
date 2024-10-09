@@ -11,7 +11,6 @@ export interface IRelayService {
   export interface IRelay {
     id: string;
     relay_connection: string;
-    wallet: string;
     services: IRelayService[];
   }
 
