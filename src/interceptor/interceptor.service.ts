@@ -48,4 +48,35 @@ export class RedirectInterceptor implements IRedirector {
   
     await this.storageService.registerService({relayId: relayId, serviceId:serviceId});
   }
+
+  public async activateService({serviceId, isRecall = false}:{serviceId:string, isRecall?:boolean}):Promise<void> {
+    if(!isRecall) {
+    await this.storageService.changeServiceStatus({serviceId: serviceId, status: ServiceStatus.RUNNING});
+    // ativar o serviço nos respectivos relays enviando um comando para tal
+    }
+    const today = new Date().getTime();
+    const minimumHibernateTimeInSecounds = 25*60; 
+    const maximumHibernateTimeInSecounds = 30*60;
+    const msFactor = 1000;
+    this.connections = await this.storageService.getConnections();
+    const lastRequest = this.connections.services.find((service)=> service.service_id === serviceId).last_request;
+    const lastRequestTimeStamp = new Date(lastRequest).getTime();
+    const lastRequestTimeDiffInSecounds = (today - lastRequestTimeStamp)/msFactor;
+    const isValidHibernateTime = Boolean(lastRequestTimeDiffInSecounds >= minimumHibernateTimeInSecounds);
+
+    if(isValidHibernateTime){
+      await this.storageService.updateRequestTime({serviceId: serviceId, status: ServiceStatus.HIBERNATING});
+      // derrubar o serviço nos respectivos relays enviando um comando para tal
+      return;
+    }
+
+    if(!isRecall){
+      setTimeout(async ()=>{
+        await this.activateService({serviceId: serviceId, isRecall:true});
+      },maximumHibernateTimeInSecounds*msFactor);
+
+    await this.storageService.updateRequestTime({serviceId: serviceId, status: ServiceStatus.RUNNING});
+    }
+    return;
+  }
 }

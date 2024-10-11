@@ -5,19 +5,33 @@
       "relay_connection": "https://weak-jokes-smell.loca.lt",
       "services": [
         {
-          "service_id": "a3fec896-f5d5-44b6-976b-a7f3ab2e2434",
-          "createdAt": "2024-10-09T21:38:19.891Z",
-          "service_connection": "https://floppy-dots-relate.loca.lt",
-          "request_count": 5,
-          "status": "RUNNING"
+          "service_id": "17d5336d-0134-4540-8ea2-af1fb6f3223a",
+          "createdAt": "2024-10-09T22:05:17.681Z",
+          "service_connection": "https://angry-actors-exist.loca.lt",
+          "request_count": 2,
+          "status": "HIBERNATING"
+        }
+      ]
+    },
+    {
+      "id": "argentina-ajshd0-2938na",
+      "relay_connection": "https://weak-jokes-smell.loca.lt",
+      "services": [
+        {
+          "service_id": "17d5336d-0134-4540-8ea2-af1fb6f3223a",
+          "createdAt": "2024-10-09T22:05:17.681Z",
+          "service_connection": "https://fancy-chefs-press.loca.lt",
+          "request_count": 8,
+          "status": "HIBERNATING"
         }
       ]
     }
   ],
   "services": [
     {
-      "service_id": "a3fec896-f5d5-44b6-976b-a7f3ab2e2434",
-      "createdAt": "2024-10-09T21:38:19.891Z"
+      "service_id": "17d5336d-0134-4540-8ea2-af1fb6f3223a",
+      "createdAt": "2024-10-09T22:05:17.681Z",
+      "last_request": "2024-10-11T05:22:24.869Z"
     }
   ]
 }

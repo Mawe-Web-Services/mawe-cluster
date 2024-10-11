@@ -182,7 +182,7 @@ export class StorageService {
                 createdAt: today,
                 service_connection: apiService.tunnelUrl,
                 request_count:0,
-                status: ServiceStatus.RUNNING
+                status: ServiceStatus.HIBERNATING
                 
               };
               connections.connections[k].services.push(serviceBody);
@@ -243,6 +243,41 @@ export class StorageService {
       }
 
       service.request_count = (service.request_count || 0) + 1;
+  
+      await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+      await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+  
+    } catch (error) {
+      console.error('Erro ao registrar serviço:', error.message);
+    }
+  }
+
+  public async updateRequestTime({  serviceId, status }: { serviceId: string , status:ServiceStatus}): Promise<void> {
+    try {
+      const today = new Date();
+      const connections = await this.getConnections();
+  
+      const service = connections.services.find((service) => service.service_id === serviceId);
+  
+      if (!service) {
+        throw new Error(`Service with ID ${serviceId} not found`);
+      }
+
+      service.last_request = today;
+      connections.connections.map((relay) => relay.services.find((service) => service.service_id === serviceId).status = status);
+  
+      await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+      await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+  
+    } catch (error) {
+      console.error('Erro ao registrar serviço:', error.message);
+    }
+  }
+  public async changeServiceStatus({  serviceId, status }: { serviceId: string , status:ServiceStatus}): Promise<void> {
+    try {
+      const connections = await this.getConnections();
+  
+      connections.connections.map((relay) => relay.services.find((service) => service.service_id === serviceId).status = status);
   
       await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
       await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');

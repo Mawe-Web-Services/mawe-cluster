@@ -24,6 +24,7 @@ export class RedirectController {
     @Req() request: Request
     ) {
     const redirectService = new RedirectInterceptor();
+    await redirectService.activateService({serviceId: query.service_id});
     const queryString = new URLSearchParams(query).toString();
     const internalServiceRoutes = params[0];
     const connections = await redirectService.interceptConnection({ serviceId: query.service_id }) as string[];
@@ -35,7 +36,7 @@ export class RedirectController {
     const shuffle = (array: string[]) => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // Troca
+        [array[i], array[j]] = [array[j], array[i]]; 
       }
       return array;
     }

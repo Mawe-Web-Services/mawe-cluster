@@ -3,6 +3,7 @@ import { ServiceStatus } from "src/core/enum/ServiceStatus";
 export interface IRelayService {
     service_id: string;
     createdAt: Date;
+    last_request?:Date;
     service_connection?: string;
     status?: ServiceStatus;
     request_count?: number;
