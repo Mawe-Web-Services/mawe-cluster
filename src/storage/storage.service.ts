@@ -8,6 +8,7 @@ import * as crypto from 'crypto';
 import { IInsertResponse } from 'src/interceptor/interfaces/IInsertResponse';
 import { IReturn } from 'src/core/interfaces/IReturn';
 import { ServiceStatus } from 'src/core/enum/ServiceStatus';
+import { response } from 'express';
 
 export class StorageService {
   private remoteService:RemoteService;
@@ -80,13 +81,13 @@ export class StorageService {
   return false;
   }
 
-  private async deployService({connect,imageName, repository}:{connect: IRelay, imageName: string, repository:string}): Promise<IReturn<{ tunnelUrl: string; applicationId: string; }>> {
+  private async deployService({connect,imageName, repository}:{connect: IRelay, imageName: string, repository:string}): Promise<IReturn<{ tunnelUrl: string; applicationId: string; imageId:string }>> {
     const deployRote = '/docker/deploy';
     const body = {
       imageName: imageName,
       repository:repository
     }
-   const response = await this.remoteService.remote<{tunnelUrl:string, applicationId:string}>({
+   const response = await this.remoteService.remote<{tunnelUrl:string, applicationId:string, imageId:string}>({
     method: HttpMethod.POST, 
     endpoint:`${connect.relay_connection}${deployRote}`, 
     authorization: connect.id, // deve ser usado o authorization específico do relay
@@ -181,8 +182,9 @@ export class StorageService {
                 service_id: newServiceId,
                 createdAt: today,
                 service_connection: apiService.tunnelUrl,
+                dockerImageId: apiService.imageId,
                 request_count:0,
-                status: ServiceStatus.HIBERNATING
+                status: ServiceStatus.RUNNING
                 
               };
               connections.connections[k].services.push(serviceBody);
@@ -193,6 +195,7 @@ export class StorageService {
               (service) => service.service_id === newServiceId
             )
           );
+
 
           if(verifyServiceOnRelay){
             const newService = {

@@ -3,13 +3,20 @@ import { StorageService } from 'src/storage/storage.service';
 import { IRedirector } from './interfaces/IRedirect';
 import { IConnections } from './interfaces/IConnections';
 import { ServiceStatus } from 'src/core/enum/ServiceStatus';
+import { RemoteService } from 'src/remote/remote.service';
+import { HttpMethod } from 'src/core/enum/HttpMethod';
 
 @Injectable()
 export class RedirectInterceptor implements IRedirector {
   private storageService: StorageService;
+  private remoteService:RemoteService;
+
+  private limitRequestTime: number;
    connections: IConnections;
   constructor() {
     this.storageService = new StorageService();
+    this.remoteService = new RemoteService();
+    this.limitRequestTime = 60000;
     
   }
 
@@ -65,8 +72,24 @@ export class RedirectInterceptor implements IRedirector {
     const isValidHibernateTime = Boolean(lastRequestTimeDiffInSecounds >= minimumHibernateTimeInSecounds);
 
     if(isValidHibernateTime){
+      const hibernateRote = '/docker/hibernate';
+
+      this.connections.connections.forEach(async (relay) => {
+        const imageId = relay.services.find((service) => service.service_id === serviceId).dockerImageId;
+        const body = {
+          imageId: imageId,
+        };
+
+        await this.remoteService.remote<{status: string, code:number}>({
+          method: HttpMethod.POST, 
+          endpoint:`${relay.relay_connection}${hibernateRote}`, 
+          authorization: relay.id,
+          body: body,
+          timeout:this.limitRequestTime
+        });
+      });
+     
       await this.storageService.updateRequestTime({serviceId: serviceId, status: ServiceStatus.HIBERNATING});
-      // derrubar o serviço nos respectivos relays enviando um comando para tal
       return;
     }
 

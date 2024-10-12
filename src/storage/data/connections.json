@@ -1,27 +1,15 @@
 {
   "connections": [
     {
-      "id": "brazil-kajs12-28jash",
-      "relay_connection": "https://weak-jokes-smell.loca.lt",
+      "id": "brazil-ajshd0-2938na",
+      "relay_connection": "http://localhost:3013",
       "services": [
         {
-          "service_id": "17d5336d-0134-4540-8ea2-af1fb6f3223a",
-          "createdAt": "2024-10-09T22:05:17.681Z",
-          "service_connection": "https://angry-actors-exist.loca.lt",
-          "request_count": 2,
-          "status": "HIBERNATING"
-        }
-      ]
-    },
-    {
-      "id": "argentina-ajshd0-2938na",
-      "relay_connection": "https://weak-jokes-smell.loca.lt",
-      "services": [
-        {
-          "service_id": "17d5336d-0134-4540-8ea2-af1fb6f3223a",
-          "createdAt": "2024-10-09T22:05:17.681Z",
-          "service_connection": "https://fancy-chefs-press.loca.lt",
-          "request_count": 8,
+          "service_id": "62869805-bc75-4f81-bd03-74036c214e30",
+          "createdAt": "2024-10-12T00:33:08.337Z",
+          "service_connection": "https://puny-spiders-sleep.loca.lt",
+          "dockerImageId": "sha256:695abe742960ee16ed30a26d0a094beea356211fb93fe1876bb1cf723f7cadcf",
+          "request_count": 1,
           "status": "HIBERNATING"
         }
       ]
@@ -29,9 +17,9 @@
   ],
   "services": [
     {
-      "service_id": "17d5336d-0134-4540-8ea2-af1fb6f3223a",
-      "createdAt": "2024-10-09T22:05:17.681Z",
-      "last_request": "2024-10-11T05:22:24.869Z"
+      "service_id": "62869805-bc75-4f81-bd03-74036c214e30",
+      "createdAt": "2024-10-12T00:33:08.337Z",
+      "last_request": "2024-10-12T00:35:13.257Z"
     }
   ]
 }

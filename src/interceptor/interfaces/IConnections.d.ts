@@ -5,6 +5,7 @@ export interface IRelayService {
     createdAt: Date;
     last_request?:Date;
     service_connection?: string;
+    dockerImageId?:string;
     status?: ServiceStatus;
     request_count?: number;
   }
