@@ -289,4 +289,17 @@ export class StorageService {
       console.error('Erro ao registrar serviço:', error.message);
     }
   }
+  public async changeServiceTunnel({  serviceId, tunnelUrl }: { serviceId: string , tunnelUrl:string}): Promise<void> {
+    try {
+      const connections = await this.getConnections();
+  
+      connections.connections.map((relay) => relay.services.find((service) => service.service_id === serviceId).service_connection = tunnelUrl);
+  
+      await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+      await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+  
+    } catch (error) {
+      console.error('Erro ao registrar serviço:', error.message);
+    }
+  }
 }

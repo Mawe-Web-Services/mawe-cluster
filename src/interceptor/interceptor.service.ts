@@ -27,7 +27,7 @@ export class RedirectInterceptor implements IRedirector {
       
         const runningConnections = this.connections.connections
             .flatMap((relay) => relay.services)
-            .filter((service) => service.service_id === serviceId && service.status === ServiceStatus.RUNNING)
+            .filter((service) => service.service_id === serviceId && (service.status === ServiceStatus.RUNNING || service.status === ServiceStatus.HIBERNATING))
             .map((service) => service.service_connection);
         
         if (runningConnections.length > 0) {
@@ -57,16 +57,43 @@ export class RedirectInterceptor implements IRedirector {
   }
 
   public async activateService({serviceId, isRecall = false}:{serviceId:string, isRecall?:boolean}):Promise<void> {
+    console.log("isRecall", isRecall)
     if(!isRecall) {
-    await this.storageService.changeServiceStatus({serviceId: serviceId, status: ServiceStatus.RUNNING});
-    // ativar o serviço nos respectivos relays enviando um comando para tal
+    const actualConnection = await this.storageService.getConnections();
+    const activateRote = '/docker/activate';
+
+    actualConnection.connections.forEach(async (relay) => {
+        const service = relay.services.find((service) => service.service_id === serviceId)
+        const imageId = service?.dockerImageId || '';
+        const body = {
+          imageId: imageId,
+        };
+
+      if(service?.status === ServiceStatus.HIBERNATING){
+       const response =  await this.remoteService.remote<{tunnelUrl: string, code:number}>({
+          method: HttpMethod.POST, 
+          endpoint:`${relay.relay_connection}${activateRote}`, 
+          authorization: relay.id,
+          body: body,
+          timeout:this.limitRequestTime
+        });
+
+        if(response.result.code === 200){
+        await this.storageService.changeServiceTunnel({serviceId:serviceId, tunnelUrl: response.result.tunnelUrl})
+        await this.storageService.changeServiceStatus({serviceId: serviceId, status: ServiceStatus.RUNNING});
+        }
+       }
+      });
+  
+    
     }
     const today = new Date().getTime();
-    const minimumHibernateTimeInSecounds = 25*60; 
-    const maximumHibernateTimeInSecounds = 30*60;
+    const minimumHibernateTimeInSecounds = 25; 
+    const maximumHibernateTimeInSecounds = 30;
     const msFactor = 1000;
     this.connections = await this.storageService.getConnections();
-    const lastRequest = this.connections.services.find((service)=> service.service_id === serviceId).last_request;
+    const service = this.connections.services.find((service)=> service.service_id === serviceId);
+    const lastRequest = service?.last_request;
     const lastRequestTimeStamp = new Date(lastRequest).getTime();
     const lastRequestTimeDiffInSecounds = (today - lastRequestTimeStamp)/msFactor;
     const isValidHibernateTime = Boolean(lastRequestTimeDiffInSecounds >= minimumHibernateTimeInSecounds);
@@ -75,22 +102,26 @@ export class RedirectInterceptor implements IRedirector {
       const hibernateRote = '/docker/hibernate';
 
       this.connections.connections.forEach(async (relay) => {
-        const imageId = relay.services.find((service) => service.service_id === serviceId).dockerImageId;
+        const relayService = relay.services.find((service) => service.service_id === serviceId);
+        const imageId = relayService?.dockerImageId;
         const body = {
           imageId: imageId,
         };
-
+        if(relayService?.status === ServiceStatus.RUNNING){
         await this.remoteService.remote<{status: string, code:number}>({
-          method: HttpMethod.POST, 
-          endpoint:`${relay.relay_connection}${hibernateRote}`, 
-          authorization: relay.id,
-          body: body,
-          timeout:this.limitRequestTime
-        });
+            method: HttpMethod.POST, 
+            endpoint:`${relay.relay_connection}${hibernateRote}`, 
+            authorization: relay.id,
+            body: body,
+            timeout:this.limitRequestTime
+          });
+
+          await this.storageService.updateRequestTime({serviceId: serviceId, status: ServiceStatus.HIBERNATING});
+          return;
+        }
+        
       });
      
-      await this.storageService.updateRequestTime({serviceId: serviceId, status: ServiceStatus.HIBERNATING});
-      return;
     }
 
     if(!isRecall){

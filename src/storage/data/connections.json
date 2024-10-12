@@ -5,11 +5,11 @@
       "relay_connection": "http://localhost:3013",
       "services": [
         {
-          "service_id": "62869805-bc75-4f81-bd03-74036c214e30",
-          "createdAt": "2024-10-12T00:33:08.337Z",
-          "service_connection": "https://puny-spiders-sleep.loca.lt",
-          "dockerImageId": "sha256:695abe742960ee16ed30a26d0a094beea356211fb93fe1876bb1cf723f7cadcf",
-          "request_count": 1,
+          "service_id": "b6ee7363-7d5a-43e3-9e9d-4b7ac4af5922",
+          "createdAt": "2024-10-12T06:59:48.498Z",
+          "service_connection": "https://twenty-hairs-learn.loca.lt",
+          "dockerImageId": "sha256:253b7ba62fc6aef74bb94dc670f016e7373a95bb03e385f21f333d33304ac5bf",
+          "request_count": 14,
           "status": "HIBERNATING"
         }
       ]
@@ -17,9 +17,9 @@
   ],
   "services": [
     {
-      "service_id": "62869805-bc75-4f81-bd03-74036c214e30",
-      "createdAt": "2024-10-12T00:33:08.337Z",
-      "last_request": "2024-10-12T00:35:13.257Z"
+      "service_id": "b6ee7363-7d5a-43e3-9e9d-4b7ac4af5922",
+      "createdAt": "2024-10-12T06:59:48.498Z",
+      "last_request": "2024-10-12T07:19:04.121Z"
     }
   ]
 }
