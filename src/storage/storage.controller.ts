@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { StorageService } from './storage.service'; 
-import { IRelay, IRelayService } from 'src/interceptor/interfaces/IConnections';
+import { IRelay } from 'src/interceptor/interfaces/IConnections';
 import { IInsertResponse } from 'src/interceptor/interfaces/IInsertResponse';
 
 @Controller() 
@@ -14,7 +14,7 @@ export class StorageController {
   }
 
   @Post('service')
-  async addService(@Body() body: { imageName: string, repository:string }): Promise<IInsertResponse> {
+  async addService(@Body() body: { imageName: string, repository:string, isHibernate:boolean }): Promise<IInsertResponse> {
     const response = await this.storageService.insertService(body);
     return response
   }

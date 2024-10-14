@@ -57,7 +57,6 @@ export class RedirectInterceptor implements IRedirector {
   }
 
   public async activateService({serviceId, isRecall = false}:{serviceId:string, isRecall?:boolean}):Promise<void> {
-    console.log("isRecall", isRecall)
     if(!isRecall) {
     const actualConnection = await this.storageService.getConnections();
     const activateRote = '/docker/activate';
@@ -88,17 +87,18 @@ export class RedirectInterceptor implements IRedirector {
     
     }
     const today = new Date().getTime();
-    const minimumHibernateTimeInSecounds = 25; 
-    const maximumHibernateTimeInSecounds = 30;
+    const minimumHibernateTimeInSecounds = 25*60; 
+    const maximumHibernateTimeInSecounds = 30*60;
     const msFactor = 1000;
     this.connections = await this.storageService.getConnections();
     const service = this.connections.services.find((service)=> service.service_id === serviceId);
     const lastRequest = service?.last_request;
+    const isHibernate = service?.is_hibernate;
     const lastRequestTimeStamp = new Date(lastRequest).getTime();
     const lastRequestTimeDiffInSecounds = (today - lastRequestTimeStamp)/msFactor;
     const isValidHibernateTime = Boolean(lastRequestTimeDiffInSecounds >= minimumHibernateTimeInSecounds);
 
-    if(isValidHibernateTime){
+    if(isValidHibernateTime && isHibernate){
       const hibernateRote = '/docker/hibernate';
 
       this.connections.connections.forEach(async (relay) => {

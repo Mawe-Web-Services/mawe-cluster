@@ -9,9 +9,11 @@ import { IInsertResponse } from 'src/interceptor/interfaces/IInsertResponse';
 import { IReturn } from 'src/core/interfaces/IReturn';
 import { ServiceStatus } from 'src/core/enum/ServiceStatus';
 import { response } from 'express';
+import { RedirectInterceptor } from 'src/interceptor/interceptor.service';
 
 export class StorageService {
   private remoteService:RemoteService;
+  private redirectInterceptor: RedirectInterceptor;
   private distFilePath: string;
   private srcFilePath: string;
   private isWriting: boolean = false; 
@@ -134,7 +136,7 @@ export class StorageService {
     });
   }
 
-  public async insertService({imageName, repository}:{imageName: string,repository:string}): Promise<IInsertResponse> {
+  public async insertService({imageName, repository, isHibernate}:{imageName: string,repository:string, isHibernate:boolean}): Promise<IInsertResponse> {
     return new Promise((resolve) => {
       const task = async (): Promise<IInsertResponse> => {
         try {
@@ -178,13 +180,15 @@ export class StorageService {
               
               const apiService = response.result;
 
+              
+
               const serviceBody: IRelayService = {
                 service_id: newServiceId,
                 createdAt: today,
                 service_connection: apiService.tunnelUrl,
                 dockerImageId: apiService.imageId,
                 request_count:0,
-                status: ServiceStatus.RUNNING
+                status: ServiceStatus.RUNNING,
                 
               };
               connections.connections[k].services.push(serviceBody);
@@ -201,6 +205,7 @@ export class StorageService {
             const newService = {
               service_id: newServiceId,
               createdAt: today,
+              is_hibernate: isHibernate
             }
             connections.services.push(newService);
           };
@@ -208,6 +213,11 @@ export class StorageService {
 
           await fs.promises.writeFile(this.srcFilePath, JSON.stringify(connections, null, 2), 'utf-8');
           await fs.promises.writeFile(this.distFilePath, JSON.stringify(connections, null, 2), 'utf-8');
+
+          if(isHibernate){
+            this.redirectInterceptor = new RedirectInterceptor();
+            await this.redirectInterceptor.activateService({serviceId: newServiceId, isRecall:false});
+          }
 
           resolve({ status: 'SUCCESS', code: 200, serviceId: newServiceId });
           return { status: 'SUCCESS', code: 200, serviceId: newServiceId };

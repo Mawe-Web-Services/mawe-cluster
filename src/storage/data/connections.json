@@ -5,11 +5,11 @@
       "relay_connection": "http://localhost:3013",
       "services": [
         {
-          "service_id": "b6ee7363-7d5a-43e3-9e9d-4b7ac4af5922",
-          "createdAt": "2024-10-12T06:59:48.498Z",
-          "service_connection": "https://twenty-hairs-learn.loca.lt",
-          "dockerImageId": "sha256:253b7ba62fc6aef74bb94dc670f016e7373a95bb03e385f21f333d33304ac5bf",
-          "request_count": 14,
+          "service_id": "b4e4f7e9-4f7a-48c2-a9ab-9673a5180ceb",
+          "createdAt": "2024-10-14T03:28:38.184Z",
+          "service_connection": "https://fluffy-nights-build.loca.lt",
+          "dockerImageId": "sha256:639f440826fc2f15b2719030843f659513b308f1b396c6fdf205936a69bdffdc",
+          "request_count": 3,
           "status": "HIBERNATING"
         }
       ]
@@ -17,9 +17,10 @@
   ],
   "services": [
     {
-      "service_id": "b6ee7363-7d5a-43e3-9e9d-4b7ac4af5922",
-      "createdAt": "2024-10-12T06:59:48.498Z",
-      "last_request": "2024-10-12T07:19:04.121Z"
+      "service_id": "b4e4f7e9-4f7a-48c2-a9ab-9673a5180ceb",
+      "createdAt": "2024-10-14T03:28:38.184Z",
+      "is_hibernate": true,
+      "last_request": "2024-10-14T03:33:20.168Z"
     }
   ]
 }

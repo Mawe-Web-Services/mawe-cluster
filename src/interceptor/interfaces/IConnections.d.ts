@@ -8,6 +8,7 @@ export interface IRelayService {
     dockerImageId?:string;
     status?: ServiceStatus;
     request_count?: number;
+    is_hibernate?: boolean;
   }
   
   export interface IRelay {
