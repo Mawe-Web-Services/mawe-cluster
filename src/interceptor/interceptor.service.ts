@@ -104,8 +104,10 @@ export class RedirectInterceptor implements IRedirector {
       this.connections.connections.forEach(async (relay) => {
         const relayService = relay.services.find((service) => service.service_id === serviceId);
         const imageId = relayService?.dockerImageId;
+
         const body = {
           imageId: imageId,
+          tunnelUrl:relayService.service_connection
         };
         if(relayService?.status === ServiceStatus.RUNNING){
         await this.remoteService.remote<{status: string, code:number}>({
